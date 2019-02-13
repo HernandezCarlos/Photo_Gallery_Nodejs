@@ -24,8 +24,8 @@ $ npm run dev
 
 ### Cloudinary API Keys
 
-You will need to add your own cloudinary api key, secret and name
-
+You will need to add your own cloudinary api key, secret and name in file .env
+ 
 ### Author
 
 Carlos Hernández

@@ -1,42 +1,31 @@
-const express = require('express');
+const bodyParser = require('body-parser');
 const morgan = require('morgan');
-const multer = require('multer');
-const path = require('path');
-const exphbs = require('express-handlebars');
-
-// Initializations
+const express = require('express');
 const app = express();
-require('./database');
+const mongoose = require('mongoose');
 
-// Settings
-app.set('port', process.env.PORT || 3000); 
-app.set('views', path.join(__dirname, 'views'));
-const views = app.get('views');
-app.engine('.hbs', exphbs({
-    defaultLayout: 'main',
-    layoutsDir: './src/views/layouts',
-    partialsDir: './src/views/partials',
-    extname: '.hbs'
-}))
-app.set('view engine', '.hbs');
+const usersRoutes = require('../src/routes/users')
 
-// Middlewares
+mongoose.Promise = global.Promise
+mongoose.connect('mongodb://localhost/rest-api-example',{
+    useMongoClient: true
+}).then(db => console.log('db esta conectada'))
+  .catch(err => console.log(err))
+
+app.set('port', process.env.PORT || 3000);
+
+//middlewares
 app.use(morgan('dev'));
-app.use(express.json());
-app.use(express.urlencoded({
-    extended: false
-}));
-const storage = multer.diskStorage({
-    destination: path.join(__dirname, 'public/uploads'),
-    filename: (req, file, cb) => {
-        cb(null, new Date().getTime() + path.extname(file.originalname));
-    }
+app.use(bodyParser.json());
+
+//routes
+app.use('/users', usersRoutes)
+
+//staticfiles
+
+//error handlers
+
+//start server
+app.listen(app.get('port'),() => {
+    console.log(`Escuchando en el puerto ${app.get('port')}`)
 });
-app.use(multer({
-    storage
-}).single('image'));
-
-// Routes
-app.use(require('./routes'));
-
-module.exports = app;

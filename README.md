@@ -20,7 +20,11 @@ To serve in the browser
 ```sh
 $ npm run dev
 ```
+## Info
 
+### Cloudinary API Keys
+
+You will need to add your own cloudinary api key, secret and name
 
 ### Author
 
